@@ -9,15 +9,16 @@ RUN sed -i 's|mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/CentOS-Base.repo && \
 # Set working directory to Apache root
 WORKDIR /var/www/html/
 # Install dependencies
+# Install Apache, curl, and unzip
 RUN yum update -y && \
-    yum install -y unzip curl httpd && \
+    yum install -y httpd curl unzip && \
     curl -Lo snapshot.zip https://assets.free-css.com/download/page293/snapshot.zip && \
     unzip snapshot.zip && \
     cp -rvf snapshot/. /var/www/html/ && \
     rm -rf snapshot snapshot.zip
-# Expose default Apache port
+# Expose Apache default port
 EXPOSE 80
-# Start Apache in foreground
+# Start Apache
 CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
  
  
