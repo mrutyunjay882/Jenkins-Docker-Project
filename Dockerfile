@@ -9,9 +9,10 @@ RUN sed -i 's|mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/CentOS-Base.repo && \
 # Set working directory to Apache root
 WORKDIR /var/www/html/
 # Download working template
-RUN curl -L -o snapshot.zip https://assets.free-css.com/download/page293/snapshot.zip && \
+RUN apt-get update && apt-get install -y unzip curl && \
+    curl -Lo snapshot.zip https://assets.free-css.com/download/page293/snapshot.zip && \
     unzip snapshot.zip && \
-    cp -rvf snapshot/* . && \
+    cp -rvf snapshot/. . && \
     rm -rf snapshot snapshot.zip
 # Start Apache
 CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
