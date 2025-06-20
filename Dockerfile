@@ -2,16 +2,14 @@ FROM centos:7
 
 MAINTAINER vikashashoke@gmail.com
 
-# Replace mirrorlist with vault baseurl to fix CentOS 7 repo issues
-RUN sed -i 's/^mirrorlist=/#mirrorlist=/' /etc/yum.repos.d/CentOS-Base.repo && \
+RUN echo ">> Before fixing repos:" && \
+    cat /etc/yum.repos.d/CentOS-Base.repo && \
+    sed -i 's/^mirrorlist=/#mirrorlist=/' /etc/yum.repos.d/CentOS-Base.repo && \
     sed -i 's|^#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Base.repo && \
+    echo ">> After fixing repos:" && \
+    cat /etc/yum.repos.d/CentOS-Base.repo && \
     yum clean all && \
-    yum makecache fast && \
-    yum install -y httpd unzip curl && \
-    curl -Lo snapshot.zip https://assets.free-css.com/download/page293/snapshot.zip && \
-    unzip snapshot.zip && \
-    cp -rvf snapshot/. /var/www/html/ && \
-    rm -rf snapshot snapshot.zip
+    yum makecache fast
 
 EXPOSE 80
 
