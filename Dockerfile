@@ -8,16 +8,17 @@ RUN sed -i 's|mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/CentOS-Base.repo && \
     yum clean all
 # Set working directory to Apache root
 WORKDIR /var/www/html/
-# Download working template
+# Install dependencies
 RUN yum update -y && \
-    yum install -y unzip curl && \
+    yum install -y unzip curl httpd && \
     curl -Lo snapshot.zip https://assets.free-css.com/download/page293/snapshot.zip && \
     unzip snapshot.zip && \
     cp -rvf snapshot/. /var/www/html/ && \
     rm -rf snapshot snapshot.zip
-# Start Apache
+# Expose default Apache port
+EXPOSE 80
+# Start Apache in foreground
 CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
-EXPOSE 88 22
  
  
 # FROM  centos:latest
