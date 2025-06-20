@@ -1,10 +1,9 @@
- FROM centos:7
+FROM centos:7
 
-# Fix CentOS repo baseurl to avoid DNS issues with mirrorlist
-RUN sed -i 's|^mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/CentOS-Base.repo && \
+# Switch from mirrorlist (which may fail) to the vault (which is stable)
+RUN sed -i 's/^mirrorlist=/#mirrorlist=/g' /etc/yum.repos.d/CentOS-Base.repo && \
     sed -i 's|^#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Base.repo && \
-    yum clean all && \
-    yum makecache && \
+    yum clean all && yum makecache && \
     yum install -y httpd unzip curl && \
     curl -Lo snapshot.zip https://assets.free-css.com/download/page293/snapshot.zip && \
     unzip snapshot.zip && \
