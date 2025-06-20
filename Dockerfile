@@ -1,22 +1,20 @@
 FROM centos:7
 MAINTAINER mrutyunjay.sahoo882@gmail.com
-# Fix CentOS 7 yum repo due to EOL (uses vault.centos.org)
+# Fix yum repo (CentOS 7 is EOL)
 RUN sed -i 's|mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/CentOS-Base.repo && \
     sed -i 's|#baseurl=|baseurl=|g' /etc/yum.repos.d/CentOS-Base.repo && \
     sed -i 's|mirror.centos.org|vault.centos.org|g' /etc/yum.repos.d/CentOS-Base.repo && \
-    yum install -y httpd zip unzip curl && \
+    yum install -y httpd unzip curl && \
     yum clean all
-# Download and extract the template
+# Set working directory to Apache root
 WORKDIR /var/www/html/
-RUN curl -L -o photogenic.zip https://www.free-css.com/assets/files/free-css-templates/download/page254/photogenic.zip && \
-    unzip photogenic.zip && \
-    cp -rvf photogenic/* . && \
-    rm -rf photogenic photogenic.zip
-
-# Start Apache in the foreground
+# Download working template
+RUN curl -L -o snapshot.zip https://assets.free-css.com/download/page293/snapshot.zip && \
+    unzip snapshot.zip && \
+    cp -rvf snapshot/* . && \
+    rm -rf snapshot snapshot.zip
+# Start Apache
 CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
-
-# Expose HTTP and optional SSH (if needed)
 EXPOSE 88 22
  
  
